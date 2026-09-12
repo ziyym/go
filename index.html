@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="referrer" content="no-referrer"><title>跳转中...</title></head>
+<body><p id="t" style="font:14px/1.6 sans-serif;padding:24px;text-align:center;color:#666">正在打开…</p>
+<script>
+(function(){
+  var p=new URLSearchParams(location.search), t=p.get('t')||'', c=p.get('c');
+  // t=base64url(落地地址); c=可选邀请码透传
+  if(!t){document.getElementById('t').textContent='链接无效';return;}
+  try{
+    var b=t.replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4)b+='=';
+    var url=decodeURIComponent(escape(atob(b)));
+    if(c) url+=(url.indexOf('?')>-1?'&':'?')+'invitationCode='+encodeURIComponent(c);
+    var u=url;
+    // QQ/微信内: 引导浏览器; 其他环境直接跳
+    var ua=navigator.userAgent||'';
+    if(/MicroMessenger|QQ\//i.test(ua)){
+      document.getElementById('t').innerHTML='请点击右上角 ··· 选择"在浏览器打开"';
+      // 复制地址兜底
+      var ta=document.createElement('textarea');ta.value=u;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');}catch(e){}
+      ta.remove();
+    }else{location.replace(u);}
+  }catch(e){document.getElementById('t').textContent='链接无效';}
+})();
+</script></body></html>
